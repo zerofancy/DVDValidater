@@ -1,4 +1,5 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -13,10 +14,12 @@ import org.slf4j.simple.SimpleLogger
 private val logger = KotlinLogging.logger {  }
 
 @Composable
-@Preview
 fun App() {
     MaterialTheme {
-        DigestButton()
+        Column {
+            DigestButton()
+            ValidateButton()
+        }
     }
 }
 
@@ -35,6 +38,27 @@ fun DigestButton(modifier: Modifier = Modifier) {
                 logger.info { "选择文件夹生成摘要信息" }
                 val dir = FileChooser.chooseDirectory()
                 println(dir)
+                selectFileState = 0
+            }
+        }
+    }
+}
+
+@Composable
+fun ValidateButton(modifier: Modifier = Modifier) {
+    var selectFileState by remember { mutableStateOf(0) }
+    Button(enabled = selectFileState == 0, onClick = {
+        selectFileState = 1
+    }) {
+        Text("校验")
+    }
+    val scope = rememberCoroutineScope()
+    LaunchedEffect(selectFileState) {
+        scope.launch {
+            if (selectFileState == 1) {
+                logger.info { "选择摘要文件进行校验" }
+                val digestFile = FileChooser.openFile("")
+                println(digestFile)
                 selectFileState = 0
             }
         }
