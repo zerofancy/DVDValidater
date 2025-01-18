@@ -6,7 +6,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.launch
+import org.slf4j.simple.SimpleLogger
+
+private val logger = KotlinLogging.logger {  }
 
 @Composable
 @Preview
@@ -22,13 +26,13 @@ fun DigestButton(modifier: Modifier = Modifier) {
     Button(enabled = selectFileState == 0, onClick = {
         selectFileState = 1
     }) {
-        Text("Digest")
+        Text("摘要")
     }
     val scope = rememberCoroutineScope()
     LaunchedEffect(selectFileState) {
         scope.launch {
             if (selectFileState == 1) {
-                println("select files")
+                logger.info { "选择文件夹生成摘要信息" }
                 val dir = FileChooser.chooseDirectory()
                 println(dir)
                 selectFileState = 0
@@ -37,8 +41,10 @@ fun DigestButton(modifier: Modifier = Modifier) {
     }
 }
 
-fun main() = application {
-    Window(onCloseRequest = ::exitApplication) {
-        App()
+fun main() {
+    application {
+        Window(onCloseRequest = ::exitApplication) {
+            App()
+        }
     }
 }

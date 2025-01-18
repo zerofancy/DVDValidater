@@ -1,3 +1,4 @@
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.lwjgl.system.MemoryUtil
@@ -5,15 +6,18 @@ import org.lwjgl.util.nfd.NativeFileDialog
 import javax.swing.JFileChooser
 import javax.swing.UIManager
 
+private val logger = KotlinLogging.logger {}
+
 object FileChooser {
+
     suspend fun chooseDirectory(): String? {
         return kotlin.runCatching { chooseDirectoryNative() }
             .onFailure { nativeException ->
-//                Logger.e("A call to chooseDirectoryNative failed: ${nativeException.message}")
+                logger.error(nativeException) { "A call to chooseDirectoryNative failed" }
 
                 return kotlin.runCatching { chooseDirectorySwing() }
                     .onFailure { swingException ->
-//                        Logger.e("A call to chooseDirectorySwing failed ${swingException.message}")
+                        logger.error(swingException) { "A call to chooseDirectorySwing failed" }
                     }
                     .getOrNull()
             }

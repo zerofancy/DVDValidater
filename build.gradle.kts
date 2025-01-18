@@ -22,6 +22,7 @@ dependencies {
     // With compose.desktop.common you will also lose @Preview functionality
     implementation(compose.desktop.currentOs)
 
+    // Folder selector
     val lwjglVersion = "3.3.1"
     listOf("lwjgl", "lwjgl-nfd").forEach { lwjglDep ->
         implementation("org.lwjgl:${lwjglDep}:${lwjglVersion}")
@@ -32,6 +33,8 @@ dependencies {
         ).forEach { native ->
             runtimeOnly("org.lwjgl:${lwjglDep}:${lwjglVersion}:${native}")
         }
+        implementation("io.github.oshai:kotlin-logging-jvm:7.0.3")
+        implementation("org.slf4j:slf4j-simple:2.0.3")
     }
 }
 
