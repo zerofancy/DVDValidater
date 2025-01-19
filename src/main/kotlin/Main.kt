@@ -1,7 +1,11 @@
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Window
@@ -31,8 +35,14 @@ private val logger = KotlinLogging.logger {  }
 fun App() {
     MaterialTheme {
         Column {
-            DigestButton()
-            ValidateButton()
+            TextField(modifier = Modifier.weight(1f).fillMaxWidth(), value = InstantDisplayLogger.state.reversed().joinToString("\n"), onValueChange = {})
+            Row {
+                DigestButton()
+                ValidateButton()
+                Button(onClick = {InstantDisplayLogger.state.clear()}) {
+                    Text("Clear")
+                }
+            }
         }
     }
 }
@@ -170,6 +180,8 @@ private fun validateDigestFile(checksumFilePath: String) {
     val document = df.newDocumentBuilder().parse(file)
     val rootElement = document.documentElement
     val checksumNodes = rootElement.getElementsByTagName("checksum")
+    var passCount = 0
+    var failedCount = 0
     repeat(checksumNodes.length) {
         val node = checksumNodes.item(it)
         val path = node.attributes.getNamedItem("path").nodeValue
@@ -180,12 +192,16 @@ private fun validateDigestFile(checksumFilePath: String) {
             val targetFile = File(file.parentFile, path)
             if (targetFile.canRead() && getFileMD5(targetFile.canonicalPath) == checksum) {
                 logger.debug { "$path [$algorithm]$checksum pass" }
+                passCount++
             } else {
                 logger.error { "$path [$algorithm]$checksum failed" }
+                failedCount++
             }
         } else {
             logger.warn { "Unknown algorithm" }
+            failedCount++
         }
+        logger.info { "$passCount pass, $failedCount fail" }
     }
 }
 

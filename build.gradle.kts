@@ -4,6 +4,7 @@ plugins {
     kotlin("jvm")
     id("org.jetbrains.compose")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("com.google.devtools.ksp") version "2.1.0-1.0.29"
 }
 
 group = "top.ntutn"
@@ -34,9 +35,16 @@ dependencies {
             runtimeOnly("org.lwjgl:${lwjglDep}:${lwjglVersion}:${native}")
         }
         implementation("io.github.oshai:kotlin-logging-jvm:7.0.3")
-        implementation("org.slf4j:slf4j-simple:2.0.3")
+        // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+        implementation("org.slf4j:slf4j-api:2.0.16")
+        //implementation("org.slf4j:slf4j-simple:2.0.3")
         // https://mvnrepository.com/artifact/org.redundent/kotlin-xml-builder
         implementation("org.redundent:kotlin-xml-builder:1.9.1")
+
+        // autoservice
+        ksp("dev.zacsweers.autoservice:auto-service-ksp:1.2.0")
+        // NOTE: It's important that you _don't_ use compileOnly here, as it will fail to resolve at compile-time otherwise
+        implementation("com.google.auto.service:auto-service-annotations:1.1.1")
     }
 }
 
