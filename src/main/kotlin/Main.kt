@@ -1,13 +1,11 @@
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -36,11 +34,13 @@ private val logger = KotlinLogging.logger {  }
 @Composable
 fun App() {
     MaterialTheme {
-        Column {
+        Column(modifier = Modifier.padding(8.dp)) {
             TextField(modifier = Modifier.weight(1f).fillMaxWidth(), value = InstantDisplayLogger.state.reversed().joinToString("\n"), onValueChange = {})
             Row {
                 DigestButton()
+                Spacer(Modifier.width(16.dp))
                 ValidateButton()
+                Spacer(Modifier.width(16.dp))
                 Button(onClick = {InstantDisplayLogger.state.clear()}) {
                     Text("Clear")
                 }
@@ -213,7 +213,7 @@ private fun validateDigestFile(checksumFilePath: String) {
 
 fun main() {
     application {
-        Window(onCloseRequest = ::exitApplication) {
+        Window(title = "DVDValidater", onCloseRequest = ::exitApplication) {
             App()
         }
     }

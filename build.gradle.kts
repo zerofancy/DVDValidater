@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "top.ntutn"
-version = "1.0-SNAPSHOT"
+version = "1.0.1"
 
 repositories {
     mavenCentral()
@@ -55,7 +55,13 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = project.name
-            packageVersion = "1.0.0"
+            packageVersion = version.toString()
+
+            windows {
+                dirChooser = true
+                menuGroup = "ntutn"
+                upgradeUuid = "e9bd2713-a6b4-478a-b199-9f73747e66fc"
+            }
         }
     }
 }
