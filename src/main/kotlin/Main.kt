@@ -11,7 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -63,7 +65,9 @@ fun DigestButton(modifier: Modifier = Modifier) {
                 val dir = FileChooser.chooseDirectory()
                 logger.debug { "choose $dir" }
                 if (!dir.isNullOrBlank()) {
-                    generateDigestFile(dir)
+                    withContext(Dispatchers.IO) {
+                        generateDigestFile(dir)
+                    }
                 }
                 selectFileState = 0
             }
@@ -87,7 +91,9 @@ fun ValidateButton(modifier: Modifier = Modifier) {
                 val digestFile = FileChooser.openFile("")
                 logger.debug { "selected $digestFile" }
                 if (digestFile != null) {
-                    validateDigestFile(digestFile)
+                    withContext(Dispatchers.IO) {
+                        validateDigestFile(digestFile)
+                    }
                 }
                 selectFileState = 0
             }
@@ -201,8 +207,8 @@ private fun validateDigestFile(checksumFilePath: String) {
             logger.warn { "Unknown algorithm" }
             failedCount++
         }
-        logger.info { "$passCount pass, $failedCount fail" }
     }
+    logger.info { "$passCount pass, $failedCount fail" }
 }
 
 fun main() {
