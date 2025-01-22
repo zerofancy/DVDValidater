@@ -23,29 +23,17 @@ dependencies {
     // With compose.desktop.common you will also lose @Preview functionality
     implementation(compose.desktop.currentOs)
 
-    // Folder selector
-    val lwjglVersion = "3.3.1"
-    listOf("lwjgl", "lwjgl-nfd").forEach { lwjglDep ->
-        implementation("org.lwjgl:${lwjglDep}:${lwjglVersion}")
-        listOf(
-            "natives-windows", "natives-windows-x86", "natives-windows-arm64",
-            "natives-macos", "natives-macos-arm64",
-            "natives-linux", "natives-linux-arm64", "natives-linux-arm32"
-        ).forEach { native ->
-            runtimeOnly("org.lwjgl:${lwjglDep}:${lwjglVersion}:${native}")
-        }
-        implementation("io.github.oshai:kotlin-logging-jvm:7.0.3")
-        // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
-        implementation("org.slf4j:slf4j-api:2.0.16")
-        //implementation("org.slf4j:slf4j-simple:2.0.3")
-        // https://mvnrepository.com/artifact/org.redundent/kotlin-xml-builder
-        implementation("org.redundent:kotlin-xml-builder:1.9.1")
+    implementation("io.github.oshai:kotlin-logging-jvm:7.0.3")
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+    implementation("org.slf4j:slf4j-api:2.0.16")
+    //implementation("org.slf4j:slf4j-simple:2.0.3")
+    // https://mvnrepository.com/artifact/org.redundent/kotlin-xml-builder
+    implementation("org.redundent:kotlin-xml-builder:1.9.1")
 
-        // autoservice
-        ksp("dev.zacsweers.autoservice:auto-service-ksp:1.2.0")
-        // NOTE: It's important that you _don't_ use compileOnly here, as it will fail to resolve at compile-time otherwise
-        implementation("com.google.auto.service:auto-service-annotations:1.1.1")
-    }
+    // autoservice
+    ksp("dev.zacsweers.autoservice:auto-service-ksp:1.2.0")
+    // NOTE: It's important that you _don't_ use compileOnly here, as it will fail to resolve at compile-time otherwise
+    implementation("com.google.auto.service:auto-service-annotations:1.1.1")
 }
 
 compose.desktop {
