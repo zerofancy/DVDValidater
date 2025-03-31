@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "top.ntutn"
-version = "1.0.1"
+version = "1.0.2"
 
 repositories {
     mavenCentral()
@@ -22,6 +22,7 @@ dependencies {
     // (in a separate module for demo project and in testMain).
     // With compose.desktop.common you will also lose @Preview functionality
     implementation(compose.desktop.currentOs)
+    implementation(compose.components.resources)
 
     implementation("io.github.oshai:kotlin-logging-jvm:7.0.3")
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
@@ -49,6 +50,7 @@ compose.desktop {
                 dirChooser = true
                 menuGroup = "ntutn"
                 upgradeUuid = "e9bd2713-a6b4-478a-b199-9f73747e66fc"
+                iconFile.set(project.file("icon.ico"))
             }
         }
     }

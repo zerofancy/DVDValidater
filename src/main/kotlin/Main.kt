@@ -12,6 +12,9 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.painterResource
+import top.ntutn.dvdvalidater.generated.resources.Res
+import top.ntutn.dvdvalidater.generated.resources.icon
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -213,7 +216,7 @@ private fun validateDigestFile(checksumFilePath: String) {
 
 fun main() {
     application {
-        Window(title = "DVDValidater", onCloseRequest = ::exitApplication) {
+        Window(title = "DVDValidater", onCloseRequest = ::exitApplication, icon = painterResource(Res.drawable.icon)) {
             App()
         }
     }
