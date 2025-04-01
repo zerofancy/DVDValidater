@@ -1,0 +1,7 @@
+-keep public class org.slf4j.** { *; }
+-dontwarn org.slf4j.**
+-keep public class ch.** { *; }
+-dontwarn ch.**
+-keep public class io.github.oshai.kotlinlogging.** { *; }
+-dontwarn io.github.oshai.kotlinlogging.**
+-keep @com.google.auto.service.AutoService class * { *; }
