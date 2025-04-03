@@ -86,7 +86,7 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "MainKt"
+        mainClass = "top.ntutn.dvdvalidater.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)

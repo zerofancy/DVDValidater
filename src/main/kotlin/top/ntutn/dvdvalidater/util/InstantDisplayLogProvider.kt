@@ -1,3 +1,5 @@
+package top.ntutn.dvdvalidater.util
+
 import com.google.auto.service.AutoService
 import org.slf4j.ILoggerFactory
 import org.slf4j.IMarkerFactory

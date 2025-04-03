@@ -1,3 +1,7 @@
+package top.ntutn.dvdvalidater
+
+import top.ntutn.dvdvalidater.util.FileChooser
+import top.ntutn.dvdvalidater.util.InstantDisplayLogger
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -44,7 +48,7 @@ fun App() {
                 Spacer(Modifier.width(16.dp))
                 ValidateButton()
                 Spacer(Modifier.width(16.dp))
-                Button(onClick = {InstantDisplayLogger.state.clear()}) {
+                Button(onClick = { InstantDisplayLogger.state.clear()}) {
                     Text("Clear")
                 }
             }
