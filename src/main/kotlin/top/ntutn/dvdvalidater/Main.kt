@@ -85,7 +85,7 @@ fun DigestButton(modifier: Modifier = Modifier) {
 @Composable
 fun ValidateButton(modifier: Modifier = Modifier) {
     var selectFileState by remember { mutableStateOf(0) }
-    Button(enabled = selectFileState == 0, onClick = {
+    Button(modifier = modifier, enabled = selectFileState == 0, onClick = {
         selectFileState = 1
     }) {
         Text("校验")
