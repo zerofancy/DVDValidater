@@ -20,6 +20,7 @@ import top.ntutn.dvdvalidater.generated.resources.Res
 import top.ntutn.dvdvalidater.generated.resources.icon
 import top.ntutn.dvdvalidater.ui.DigestButton
 import top.ntutn.dvdvalidater.ui.ValidateButton
+import top.ntutn.dvdvalidater.util.CrashAnalysisUtil
 import top.ntutn.dvdvalidater.util.InstantDisplayLogger
 
 @Composable
@@ -32,7 +33,9 @@ fun App() {
                 Spacer(Modifier.width(16.dp))
                 ValidateButton()
                 Spacer(Modifier.width(16.dp))
-                Button(onClick = { InstantDisplayLogger.state.clear()}) {
+                Button(onClick = {
+                    InstantDisplayLogger.state.clear()
+                }) {
                     Text("Clear")
                 }
             }
@@ -43,6 +46,7 @@ fun App() {
 
 fun main() {
     application {
+        CrashAnalysisUtil.plant()
         Window(title = "DVDValidater", onCloseRequest = ::exitApplication, icon = painterResource(Res.drawable.icon)) {
             App()
         }
