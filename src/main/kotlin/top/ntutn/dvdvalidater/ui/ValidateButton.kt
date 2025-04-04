@@ -1,0 +1,85 @@
+package top.ntutn.dvdvalidater.ui
+
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import top.ntutn.dvdvalidater.util.DigestUtils
+import top.ntutn.dvdvalidater.util.FileChooser
+import java.io.File
+import javax.xml.parsers.DocumentBuilderFactory
+
+private val logger = KotlinLogging.logger {  }
+
+@Composable
+fun ValidateButton(modifier: Modifier = Modifier) {
+    var selectFileState by remember { mutableStateOf(0) }
+    Button(modifier = modifier, enabled = selectFileState == 0, onClick = {
+        selectFileState = 1
+    }) {
+        Text("校验")
+    }
+    val scope = rememberCoroutineScope()
+    LaunchedEffect(selectFileState) {
+        scope.launch {
+            if (selectFileState == 1) {
+                logger.info { "选择摘要文件进行校验" }
+                val digestFile = FileChooser.openFile("")
+                logger.debug { "selected $digestFile" }
+                if (digestFile != null) {
+                    withContext(Dispatchers.IO) {
+                        validateDigestFile(digestFile)
+                    }
+                }
+                selectFileState = 0
+            }
+        }
+    }
+}
+
+
+
+private fun validateDigestFile(checksumFilePath: String) {
+    val file = File(checksumFilePath)
+    if (!file.exists() || !file.canRead() || file.extension != "dvdv") {
+        logger.error { "Not a valid checksum file" }
+        return
+    }
+    val df = DocumentBuilderFactory.newInstance()
+    val document = df.newDocumentBuilder().parse(file)
+    val rootElement = document.documentElement
+    val checksumNodes = rootElement.getElementsByTagName("checksum")
+    var passCount = 0
+    var failedCount = 0
+    repeat(checksumNodes.length) {
+        val node = checksumNodes.item(it)
+        val path = node.attributes.getNamedItem("path").nodeValue
+        val checksum = node.attributes.getNamedItem("checksum").nodeValue
+        val algorithm = node.attributes.getNamedItem("algorithm").nodeValue
+        logger.debug { "path=${path}, checksum=${checksum}, algorithm=${algorithm}" }
+        if (algorithm.lowercase() == "md5") {
+            val targetFile = File(file.parentFile, path)
+            if (targetFile.canRead() && DigestUtils.getFileMD5(targetFile.canonicalPath) == checksum) {
+                logger.debug { "$path [$algorithm]$checksum pass" }
+                passCount++
+            } else {
+                logger.error { "$path [$algorithm]$checksum failed" }
+                failedCount++
+            }
+        } else {
+            logger.warn { "Unknown algorithm" }
+            failedCount++
+        }
+    }
+    logger.info { "$passCount pass, $failedCount fail" }
+}
