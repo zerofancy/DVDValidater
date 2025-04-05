@@ -1,6 +1,7 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import java.io.FileOutputStream
 import java.io.InputStream
+import java.net.URI
 import java.net.URL
 
 plugins {
@@ -22,7 +23,7 @@ repositories {
 // 下载 JAR 文件的任务
 tasks.register("downloadKotlinLoggingJar") {
     doLast {
-        val url = URL("https://repo1.maven.org/maven2/io/github/oshai/kotlin-logging-jvm/7.0.3/kotlin-logging-jvm-7.0.3.jar")
+        val url = URI.create("https://repo1.maven.org/maven2/io/github/oshai/kotlin-logging-jvm/7.0.3/kotlin-logging-jvm-7.0.3.jar").toURL()
         val outputDir = layout.buildDirectory.dir("downloaded-jars").get().asFile
         outputDir.mkdirs()
         val outputFile = File(outputDir, "kotlin-logging-jvm-7.0.3.jar")
