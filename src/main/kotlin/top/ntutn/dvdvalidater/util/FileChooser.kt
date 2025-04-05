@@ -1,22 +1,22 @@
 package top.ntutn.dvdvalidater.util
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import top.ntutn.dvdvalidater.logger.slf4jLogger
 import javax.swing.JFileChooser
 import javax.swing.UIManager
 
-private val logger = KotlinLogging.logger {}
-
 object FileChooser {
+    private val logger by slf4jLogger("file-chooser")
+
     suspend fun openFile(filterList: String): String? {
         return kotlin.runCatching { openFileNFD(filterList) }
             .onFailure { nativeException ->
-                logger.error(nativeException) { "A call to openFileNFD failed" }
+                logger.error("A call to openFileNFD failed" , nativeException)
 
                 return kotlin.runCatching { openFileSwing() }
                     .onFailure { swingException ->
-                        logger.error(swingException) { "A call to openFileSwing failed" }
+                        logger.error("A call to openFileSwing failed", swingException)
                     }
                     .getOrNull()
             }
@@ -46,11 +46,11 @@ object FileChooser {
     suspend fun chooseDirectory(): String? {
         return kotlin.runCatching { chooseDirectoryNative() }
             .onFailure { nativeException ->
-                logger.error(nativeException) { "A call to chooseDirectoryNative failed" }
+                logger.error("A call to chooseDirectoryNative failed", nativeException)
 
                 return kotlin.runCatching { chooseDirectorySwing() }
                     .onFailure { swingException ->
-                        logger.error(swingException) { "A call to chooseDirectorySwing failed" }
+                        logger.error("A call to chooseDirectorySwing failed", swingException)
                     }
                     .getOrNull()
             }

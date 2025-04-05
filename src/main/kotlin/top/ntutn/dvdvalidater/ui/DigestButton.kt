@@ -10,10 +10,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import top.ntutn.dvdvalidater.logger.slf4jLogger
 import top.ntutn.dvdvalidater.util.DigestUtils
 import top.ntutn.dvdvalidater.util.FileChooser
 import java.io.File
@@ -30,7 +30,7 @@ import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stream.StreamResult
 import kotlin.io.path.relativeTo
 
-private val logger = KotlinLogging.logger {  }
+private val logger by slf4jLogger("digest_button")
 
 @Composable
 fun DigestButton(modifier: Modifier = Modifier) {
@@ -44,9 +44,9 @@ fun DigestButton(modifier: Modifier = Modifier) {
     LaunchedEffect(selectFileState) {
         scope.launch {
             if (selectFileState == 1) {
-                logger.info { "选择文件夹生成摘要信息" }
+                logger.info("选择文件夹生成摘要信息")
                 val dir = FileChooser.chooseDirectory()
-                logger.debug { "choose $dir" }
+                logger.debug("choose $dir")
                 if (!dir.isNullOrBlank()) {
                     withContext(Dispatchers.IO) {
                         generateDigestFile(dir)
@@ -62,12 +62,12 @@ fun DigestButton(modifier: Modifier = Modifier) {
 private fun generateDigestFile(dirString: String) {
     val dirFile = File(dirString)
     if (!dirFile.exists() || !dirFile.isDirectory) {
-        logger.error { "目标位置不可用 $dirFile" }
+        logger.error("目标位置不可用 $dirFile")
         return
     }
     val targetFile = File(dirFile, "checksum.dvdv")
     if (targetFile.exists()) {
-        logger.warn { "删除已存在的校验文件" }
+        logger.warn("删除已存在的校验文件")
         targetFile.delete()
     }
 
@@ -84,9 +84,9 @@ private fun generateDigestFile(dirString: String) {
         }
 
         override fun visitFile(p0: Path, p1: BasicFileAttributes): FileVisitResult {
-            logger.debug { "generating checksum for $p0" }
+            logger.debug("generating checksum for {}", p0)
             val mdString = DigestUtils.getFileMD5(p0.toString())
-            logger.debug { mdString }
+            logger.debug(mdString)
 
             val element = document.createElement("checksum")
             element.setAttribute("path", p0.relativeTo(dirPath).toString())
@@ -97,7 +97,7 @@ private fun generateDigestFile(dirString: String) {
         }
 
         override fun visitFileFailed(p0: Path?, p1: IOException): FileVisitResult {
-            logger.warn(p1) { "visit $p0 failed" }
+            logger.warn("visit $p0 failed", p1)
             return FileVisitResult.CONTINUE
         }
 

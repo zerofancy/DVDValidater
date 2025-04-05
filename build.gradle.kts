@@ -20,49 +20,6 @@ repositories {
     google()
 }
 
-val logVersion = "7.0.6"
-
-// 下载 JAR 文件的任务
-tasks.register("downloadKotlinLoggingJar") {
-    doLast {
-        val url = URI.create("https://repo1.maven.org/maven2/io/github/oshai/kotlin-logging-jvm/$logVersion/kotlin-logging-jvm-$logVersion.jar").toURL()
-        val outputDir = layout.buildDirectory.dir("downloaded-jars").get().asFile
-        outputDir.mkdirs()
-        val outputFile = File(outputDir, "kotlin-logging-jvm-$logVersion.jar")
-
-        val connection = url.openConnection()
-        val inputStream: InputStream = connection.getInputStream()
-        val outputStream = FileOutputStream(outputFile)
-
-        val buffer = ByteArray(4096)
-        var bytesRead: Int
-        while (inputStream.read(buffer).also { bytesRead = it } != -1) {
-            outputStream.write(buffer, 0, bytesRead)
-        }
-
-        inputStream.close()
-        outputStream.close()
-    }
-}
-
-// 移除指定类的任务
-tasks.register<Copy>("removeClassesFromKotlinLoggingJar") {
-    dependsOn("downloadKotlinLoggingJar")
-    val jarFile = layout.buildDirectory.file("downloaded-jars/kotlin-logging-jvm-$logVersion.jar").get().asFile
-    from(zipTree(jarFile))
-    into("build/modified-kotlin-logging-jar")
-    exclude("io/github/oshai/kotlinlogging/logback/internal/*.class") // 替换为你要移除的类
-    exclude("io/github/oshai/kotlinlogging/logback/*.class") // 替换为你要移除的类
-}
-
-// 重新打包 JAR 文件的任务
-tasks.register<Jar>("repackageKotlinLoggingJar") {
-    dependsOn("removeClassesFromKotlinLoggingJar")
-    archiveBaseName.set("kotlin-logging-jvm-$logVersion-modified")
-    from("build/modified-kotlin-logging-jar")
-}
-
-
 dependencies {
     // Note, if you develop a library, you should use compose.desktop.common.
     // compose.desktop.currentOs should be used in launcher-sourceSet
@@ -70,11 +27,6 @@ dependencies {
     // With compose.desktop.common you will also lose @Preview functionality
     implementation(compose.desktop.currentOs)
     implementation(compose.components.resources)
-
-    // 使用处理后的 JAR 文件作为依赖
-    // kotlin-logging的jar包存在logback-classic包中类的子类，不添加依赖情况下会导致proguard出错
-    // 尽管这些类本来就不会被加载
-    implementation(files(tasks.named<Jar>("repackageKotlinLoggingJar").get().archiveFile.get().asFile))
 
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
     implementation("org.slf4j:slf4j-api:2.0.16")
@@ -167,18 +119,6 @@ tasks.create("packageDebWithoutJVM") {
             debProc.errorStream.readAllBytes().decodeToString().let(::println)
         } else {
             println("$outputDir.jar built success")
-        }
-    }
-}
-
-// 让项目配置任务依赖于 repackageKotlinLoggingJar 任务
-// 这样在项目配置时就会触发 JAR 文件的修改和重新打包
-gradle.projectsEvaluated {
-    tasks.configureEach {
-        if (name.startsWith("compile") && name.endsWith("Kotlin")) {
-            dependsOn("repackageKotlinLoggingJar")
-        } else if (name == "kspKotlin") {
-            dependsOn("repackageKotlinLoggingJar")
         }
     }
 }

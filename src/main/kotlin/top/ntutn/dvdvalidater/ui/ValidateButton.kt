@@ -10,16 +10,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import top.ntutn.dvdvalidater.logger.slf4jLogger
 import top.ntutn.dvdvalidater.util.DigestUtils
 import top.ntutn.dvdvalidater.util.FileChooser
 import java.io.File
 import javax.xml.parsers.DocumentBuilderFactory
 
-private val logger = KotlinLogging.logger {  }
+private val logger by slf4jLogger("validate_button")
 
 @Composable
 fun ValidateButton(modifier: Modifier = Modifier) {
@@ -33,9 +33,9 @@ fun ValidateButton(modifier: Modifier = Modifier) {
     LaunchedEffect(selectFileState) {
         scope.launch {
             if (selectFileState == 1) {
-                logger.info { "选择摘要文件进行校验" }
+                logger.info("选择摘要文件进行校验")
                 val digestFile = FileChooser.openFile("")
-                logger.debug { "selected $digestFile" }
+                logger.debug("selected $digestFile")
                 if (digestFile != null) {
                     withContext(Dispatchers.IO) {
                         validateDigestFile(digestFile)
@@ -47,12 +47,10 @@ fun ValidateButton(modifier: Modifier = Modifier) {
     }
 }
 
-
-
 private fun validateDigestFile(checksumFilePath: String) {
     val file = File(checksumFilePath)
     if (!file.exists() || !file.canRead() || file.extension != "dvdv") {
-        logger.error { "Not a valid checksum file" }
+        logger.error("Not a valid checksum file")
         return
     }
     val df = DocumentBuilderFactory.newInstance()
@@ -66,20 +64,20 @@ private fun validateDigestFile(checksumFilePath: String) {
         val path = node.attributes.getNamedItem("path").nodeValue
         val checksum = node.attributes.getNamedItem("checksum").nodeValue
         val algorithm = node.attributes.getNamedItem("algorithm").nodeValue
-        logger.debug { "path=${path}, checksum=${checksum}, algorithm=${algorithm}" }
+        logger.debug("path=${path}, checksum=${checksum}, algorithm=${algorithm}")
         if (algorithm.lowercase() == "md5") {
             val targetFile = File(file.parentFile, path)
             if (targetFile.canRead() && DigestUtils.getFileMD5(targetFile.canonicalPath) == checksum) {
-                logger.debug { "$path [$algorithm]$checksum pass" }
+                logger.debug("$path [$algorithm]$checksum pass")
                 passCount++
             } else {
-                logger.error { "$path [$algorithm]$checksum failed" }
+                logger.error("$path [$algorithm]$checksum failed")
                 failedCount++
             }
         } else {
-            logger.warn { "Unknown algorithm" }
+            logger.warn("Unknown algorithm")
             failedCount++
         }
     }
-    logger.info { "$passCount pass, $failedCount fail" }
+    logger.info("$passCount pass, $failedCount fail")
 }
