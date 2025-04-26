@@ -57,6 +57,10 @@ compose.desktop {
                 upgradeUuid = "e9bd2713-a6b4-478a-b199-9f73747e66fc"
                 iconFile.set(project.file("icon.ico"))
             }
+
+            linux {
+                iconFile.set(project.file("src/main/composeResources/icon.png"))
+            }
         }
 
         buildTypes.release.proguard {
