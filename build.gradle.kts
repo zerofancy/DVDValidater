@@ -33,6 +33,7 @@ dependencies {
     // NOTE: It's important that you _don't_ use compileOnly here, as it will fail to resolve at compile-time otherwise
     implementation(libs.auto.service.annotations)
     implementation(libs.open)
+    implementation(libs.filekit.dialogs.compose)
 }
 
 compose.desktop {

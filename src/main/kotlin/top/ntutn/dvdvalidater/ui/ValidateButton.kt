@@ -34,7 +34,7 @@ fun ValidateButton(modifier: Modifier = Modifier) {
         scope.launch {
             if (selectFileState == 1) {
                 logger.info("选择摘要文件进行校验")
-                val digestFile = FileChooser.openFile("")
+                val digestFile = FileChooser.openFile(setOf("dvdv"))
                 logger.debug("selected $digestFile")
                 if (digestFile != null) {
                     withContext(Dispatchers.IO) {
