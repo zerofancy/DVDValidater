@@ -1,0 +1,24 @@
+[versions]
+kotlin = "2.1.0"
+compose-plugin = "1.7.3"
+filekit = "0.10.0-beta02"
+ksp = "2.1.0-1.0.29"
+slf4j = "2.0.16"
+xml-builder = "1.9.1"
+autoservice-ksp = "1.2.0"
+autoservice = "1.1.1"
+open = "8.5.0.4"
+
+[libraries]
+filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose", version.ref = "filekit" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+kotlin-xml-builder = { module = "org.redundent:kotlin-xml-builder", version.ref = "xml-builder" }
+auto-service-ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version.ref = "autoservice-ksp" }
+auto-service-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "autoservice" }
+open = { module = "com.vaadin:open", version.ref = "open" }
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
