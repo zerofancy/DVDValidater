@@ -44,6 +44,7 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = project.name
             packageVersion = version.toString()
+            modules("jdk.security.auth")
 
             windows {
                 dirChooser = true
@@ -53,12 +54,15 @@ compose.desktop {
             }
 
             linux {
-                iconFile.set(project.file("src/main/composeResources/icon.png"))
+                iconFile.set(project.file("src/main/composeResources/drawable/icon.png"))
             }
         }
 
         buildTypes.release.proguard {
-            configurationFiles.from(project.file("log.pro"))
+            configurationFiles.from(
+                project.file("log.pro"),
+                project.file("filekt.pro"),
+            )
         }
     }
 }
