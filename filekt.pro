@@ -1,1 +1,2 @@
 -keep public class org.freedesktop.dbus.** { *; }
+-keep public class io.github.vinceglb.** { *; }
