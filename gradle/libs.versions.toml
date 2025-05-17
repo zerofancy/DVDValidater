@@ -1,7 +1,7 @@
 [versions]
 kotlin = "2.1.20"
-compose-plugin = "1.7.3"
-filekit = "0.10.0-beta02"
+compose-plugin = "1.8.0"
+filekit = "0.10.0-beta04"
 ksp = "2.1.20-2.0.0"
 slf4j = "2.0.17"
 xml-builder = "1.9.3"
