@@ -1,8 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import java.io.FileOutputStream
-import java.io.InputStream
-import java.net.URI
-import java.net.URL
 
 plugins {
     alias(libs.plugins.kotlin)
@@ -27,6 +23,7 @@ dependencies {
     // With compose.desktop.common you will also lose @Preview functionality
     implementation(compose.desktop.currentOs)
     implementation(compose.components.resources)
+    implementation(compose.material3)
     implementation(libs.slf4j.api)
     implementation(libs.kotlin.xml.builder)
     ksp(libs.auto.service.ksp)
