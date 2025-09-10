@@ -3,16 +3,22 @@ package top.ntutn.dvdvalidater
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
@@ -29,12 +35,27 @@ import top.ntutn.dvdvalidater.util.CrashAnalysisUtil
 fun App() {
     MaterialTheme {
         Column(modifier = Modifier.padding(8.dp)) {
-            val userLog by UserLogger.logFlow.collectAsState("")
-            TextField(
-                modifier = Modifier.weight(1f).fillMaxWidth(),
-                value = userLog,
-                onValueChange = {}
-            )
+            val userLog by UserLogger.logFlow.collectAsState(emptyList())
+            val reversedLog by remember { derivedStateOf { userLog.reversed() } }
+            Surface(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                tonalElevation = 4.dp,
+                shadowElevation = 4.dp
+            ) {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxSize()
+                ) {
+                    items(reversedLog.size) { i ->
+                        SelectionContainer {
+                            Text(reversedLog[i])
+                        }
+                    }
+                }
+            }
             Row {
                 DigestButton()
                 Spacer(Modifier.width(16.dp))

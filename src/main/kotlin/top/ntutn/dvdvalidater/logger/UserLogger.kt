@@ -14,14 +14,12 @@ class UserLogger(private val tag: String) {
     }
 
     companion object {
-        private var log = StringBuffer()
         private val sdf = SimpleDateFormat("HH:mm:ss")
-        private val _logFlow = MutableStateFlow("")
-        val logFlow: Flow<String> get() = _logFlow
+        private val _logFlow = MutableStateFlow(emptyList<String>())
+        val logFlow: Flow<List<String>> get() = _logFlow
 
         fun clear() {
-            log = StringBuffer()
-            _logFlow.value = ""
+            _logFlow.value = emptyList()
         }
     }
 
@@ -29,8 +27,8 @@ class UserLogger(private val tag: String) {
         val time = synchronized(sdf) {
             sdf.format(System.currentTimeMillis())
         }
-        log.insert(0, "$time [$level] $tag:$message\n")
-        _logFlow.value = log.toString()
+        val log = "$time [$level] $tag:$message\n"
+        _logFlow.value += log
     }
 
     fun verbose(message: String) = log(Level.VERBOSE, message)
