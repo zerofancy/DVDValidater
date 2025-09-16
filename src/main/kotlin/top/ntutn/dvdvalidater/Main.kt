@@ -24,8 +24,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import top.ntutn.dvdvalidater.generated.resources.Res
+import top.ntutn.dvdvalidater.generated.resources.clear_button
 import top.ntutn.dvdvalidater.generated.resources.icon
+import top.ntutn.dvdvalidater.generated.resources.title
 import top.ntutn.dvdvalidater.logger.UserLogger
 import top.ntutn.dvdvalidater.ui.DigestButton
 import top.ntutn.dvdvalidater.ui.ValidateButton
@@ -64,7 +67,7 @@ fun App() {
                 Button(onClick = {
                     UserLogger.clear()
                 }) {
-                    Text("Clear")
+                    Text(stringResource(Res.string.clear_button))
                 }
             }
         }
@@ -75,7 +78,7 @@ fun App() {
 fun main() {
     application {
         CrashAnalysisUtil.plant()
-        Window(title = "DVDValidater", onCloseRequest = ::exitApplication, icon = painterResource(Res.drawable.icon)) {
+        Window(title = stringResource(Res.string.title), onCloseRequest = ::exitApplication, icon = painterResource(Res.drawable.icon)) {
             App()
         }
     }

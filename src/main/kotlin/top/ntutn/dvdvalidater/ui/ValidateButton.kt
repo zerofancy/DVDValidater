@@ -13,6 +13,9 @@ import androidx.compose.ui.Modifier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.stringResource
+import top.ntutn.dvdvalidater.generated.resources.Res
+import top.ntutn.dvdvalidater.generated.resources.validate_button
 import top.ntutn.dvdvalidater.logger.userLogger
 import top.ntutn.dvdvalidater.util.DigestUtils
 import top.ntutn.dvdvalidater.util.FileChooser
@@ -27,7 +30,7 @@ fun ValidateButton(modifier: Modifier = Modifier) {
     Button(modifier = modifier, enabled = selectFileState == 0, onClick = {
         selectFileState = 1
     }) {
-        Text("校验")
+        Text(stringResource(Res.string.validate_button))
     }
     val scope = rememberCoroutineScope()
     LaunchedEffect(selectFileState) {

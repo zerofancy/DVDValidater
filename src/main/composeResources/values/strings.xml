@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">DVDValidater</string>
+    <string name="title">DVDValidater</string>
+    <string name="digest_button">摘要</string>
+    <string name="validate_button">校验</string>
+    <string name="clear_button">清理</string>
+</resources>

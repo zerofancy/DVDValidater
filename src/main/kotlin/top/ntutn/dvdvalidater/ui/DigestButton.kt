@@ -13,6 +13,9 @@ import androidx.compose.ui.Modifier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.stringResource
+import top.ntutn.dvdvalidater.generated.resources.Res
+import top.ntutn.dvdvalidater.generated.resources.digest_button
 import top.ntutn.dvdvalidater.logger.slf4jLogger
 import top.ntutn.dvdvalidater.logger.userLogger
 import top.ntutn.dvdvalidater.util.DigestUtils
@@ -40,7 +43,7 @@ fun DigestButton(modifier: Modifier = Modifier) {
     Button(modifier = modifier, enabled = selectFileState == 0, onClick = {
         selectFileState = 1
     }) {
-        Text("摘要")
+        Text(stringResource(Res.string.digest_button))
     }
     val scope = rememberCoroutineScope()
     LaunchedEffect(selectFileState) {
