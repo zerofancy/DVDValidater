@@ -27,7 +27,7 @@ class UserLogger(private val tag: String) {
         val time = synchronized(sdf) {
             sdf.format(System.currentTimeMillis())
         }
-        val log = "$time [$level] $tag:$message\n"
+        val log = "$time [$level] $tag:$message"
         _logFlow.value += log
     }
 

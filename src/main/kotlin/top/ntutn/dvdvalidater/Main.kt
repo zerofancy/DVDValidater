@@ -1,5 +1,6 @@
 package top.ntutn.dvdvalidater
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,13 +14,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
@@ -54,7 +55,10 @@ fun App() {
                 ) {
                     items(reversedLog.size) { i ->
                         SelectionContainer {
-                            Text(reversedLog[i])
+                            Text(reversedLog[i], modifier = Modifier
+                                .background(if (i % 2 == 0 ) Color.Transparent else Color.LightGray)
+                                .fillMaxWidth()
+                            )
                         }
                     }
                 }
