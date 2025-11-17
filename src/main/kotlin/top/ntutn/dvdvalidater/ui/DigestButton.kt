@@ -14,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
+import top.ntutn.dvdvalidater.Constants
 import top.ntutn.dvdvalidater.generated.resources.Res
 import top.ntutn.dvdvalidater.generated.resources.digest_button
 import top.ntutn.dvdvalidater.logger.slf4jLogger
@@ -34,8 +35,8 @@ import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stream.StreamResult
 import kotlin.io.path.relativeTo
 
-private val userLogger by userLogger("digest_button")
-private val logger by slf4jLogger("digest_button")
+private val userLogger by userLogger(Constants.DIGEST_BUTTON_LOG_TAG)
+private val logger by slf4jLogger(Constants.DIGEST_BUTTON_LOG_TAG)
 
 @Composable
 fun DigestButton(modifier: Modifier = Modifier) {
@@ -70,7 +71,7 @@ private fun generateDigestFile(dirString: String) {
         userLogger.error("目标位置不可用 $dirFile")
         return
     }
-    val targetFile = File(dirFile, "checksum.dvdv")
+    val targetFile = File(dirFile, Constants.CHECKSUM_FILE_NAME)
     if (targetFile.exists()) {
         userLogger.warn("删除已存在的校验文件")
         targetFile.delete()
@@ -81,7 +82,7 @@ private fun generateDigestFile(dirString: String) {
     val df = DocumentBuilderFactory.newInstance()
     val db = df.newDocumentBuilder()
     val document = db.newDocument()
-    val rootElement = document.createElement("checksums")
+    val rootElement = document.createElement(Constants.XML_ROOT_ELEMENT)
 
     Files.walkFileTree(dirPath, object : FileVisitor<Path> {
         override fun preVisitDirectory(p0: Path?, p1: BasicFileAttributes): FileVisitResult {
@@ -93,10 +94,10 @@ private fun generateDigestFile(dirString: String) {
             val mdString = DigestUtils.getFileMD5(p0.toString())
             userLogger.debug(mdString)
 
-            val element = document.createElement("checksum")
-            element.setAttribute("path", p0.relativeTo(dirPath).toString())
-            element.setAttribute("checksum", mdString)
-            element.setAttribute("algorithm", "md5")
+            val element = document.createElement(Constants.XML_CHECKSUM_ELEMENT)
+            element.setAttribute(Constants.XML_PATH_ATTRIBUTE, p0.relativeTo(dirPath).toString())
+            element.setAttribute(Constants.XML_CHECKSUM_ATTRIBUTE, mdString)
+            element.setAttribute(Constants.XML_ALGORITHM_ATTRIBUTE, Constants.XML_MD5_ALGORITHM)
             rootElement.appendChild(element)
             return FileVisitResult.CONTINUE
         }

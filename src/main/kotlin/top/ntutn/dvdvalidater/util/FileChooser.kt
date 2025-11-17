@@ -4,10 +4,11 @@ import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.openDirectoryPicker
 import io.github.vinceglb.filekit.dialogs.openFilePicker
+import top.ntutn.dvdvalidater.Constants
 import top.ntutn.dvdvalidater.logger.slf4jLogger
 
 object FileChooser {
-    private val logger by slf4jLogger("file-chooser")
+    private val logger by slf4jLogger(Constants.FILE_CHOOSER_TAG)
 
     suspend fun openFile(filterList: Set<String>? = null): String? {
         return kotlin.runCatching { openFileNative(filterList) }

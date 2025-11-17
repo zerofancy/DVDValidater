@@ -1,5 +1,6 @@
 package top.ntutn.dvdvalidater.util
 
+import top.ntutn.dvdvalidater.Constants
 import java.io.File
 import java.io.FileInputStream
 import java.security.MessageDigest
@@ -8,7 +9,7 @@ object DigestUtils {
     fun getFileMD5(filePath: String): String {
         val md = MessageDigest.getInstance("MD5")
         FileInputStream(File(filePath)).use { fis ->
-            val dataBytes = ByteArray(1024)
+            val dataBytes = ByteArray(Constants.DEFAULT_BUFFER_SIZE)
             var nread: Int
             // 从文件输入流中读取数据，并更新MessageDigest对象
             while (fis.read(dataBytes).also { nread = it }!= -1) {
